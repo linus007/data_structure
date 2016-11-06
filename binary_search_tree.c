@@ -15,13 +15,18 @@ struct BSTree_Node * createNOde(ElemType e) {
 		exit(0);
 	}
 	node_p->data = e;
+	//Modify By Lin Start Initial the value of NULL
+	node_p->right = NULL;
+	node_p->left = NULL;
+	node_p->p = NULL;
+    //Modify By Lin End
 	return node_p;
 }
 int treeInsert(BSTree *bst, ElemType e) {
+
 	struct BSTree_Node * y = NULL;
 	struct BSTree_Node * x = *bst;
 	while (x != NULL) {
-		printf("not null\n");
         y = x;
 		if (e > x->data) {
 			x = x->right;
@@ -31,58 +36,25 @@ int treeInsert(BSTree *bst, ElemType e) {
 			return 0;
 		}
 	}
-	struct BSTree_Node * data = createNOde(e);
-	data->p = y;
+	struct BSTree_Node * node = createNOde(e);
+
+	node->p = y;
+
 	if (y == NULL) {
-		*bst = data;
-	} else {
-		if (e < y->data) {
-			y->left = data;
-		} else {
-			y->right = data;
-		}
+		*bst = node;
 	}
+	else {
+		if (e < y->data) {
+			y->left = node;
+		} else {
+			y->right = node;
+		}
+
+	}
+
 	return 1;
 }
-struct BSTree_Node minimum(BSTree bst) {
-    if (bst == NULL) {
-        printf("empty tree\n");
-        reurn NULL;
-    }
-    BSTree_Node *x = bst;
-    while (x->left) {
-        x = x-left;
-    }
-    return x;
-}
-struct BSTree_Node maxmum(BSTree bst) {
-    if (bst == NULL) {
-        printf("empty tree\n");
-        return NULL;
-    }
-    BSTree_Node * x = bst;
-    while (x->right) {
-        x = x->right;
-    }
-     return x;
 
-
-}
-struct BSTree_Node *treeSuccessor(BSTree bst, BSTree_Node * z){
-    BSTree_Node * node = find_Elem(bst, z->data);
-    if (node != z) {
-        printf("this node is not in this tree\n");    
-        return NULL;
-    }
-    if (z->right) {
-        return minimum(bst);
-    }
-    
-}
-int treeDelete(BSTree *bst, ElemType e) {
-    struct BSTree_Node * z = find_Elem(e);
-    return 1;
-}
 struct BSTree_Node *find_Elem(BSTree bst, ElemType e) {
     struct BSTree_Node *p = bst;
     while (p != NULL) {
@@ -96,12 +68,57 @@ struct BSTree_Node *find_Elem(BSTree bst, ElemType e) {
     }
     return p;
 }
-int treeInser_in_Array(BSTree *bst, ElemType *arr, int len) {
+int treeInser_in_Array(BSTree *bst, ElemType arr[], int len) {
 	int i = 0;
 	while (i < len) {
 		treeInsert(bst, arr[i++]);
 	}
 	return i;
+}
+
+struct BSTree_Node* minimum(BSTree bst) {
+    if (bst == NULL) {
+        printf("empty tree\n");
+        return NULL;
+    }
+    struct BSTree_Node *x = bst;
+    while (x->left) {
+        x = x->left;    
+    }
+    return x;
+}
+
+struct BSTree_Node *maxmum(BSTree bst) {
+    if (bst == NULL) {
+        printf("empty tree\n");
+        return NULL;
+    }
+    struct BSTree_Node * x = bst;
+    while(x->right) {
+        x = x->right;
+    }
+    return x;
+}
+
+struct BSTree_Node * successor(BSTree bst, struct BSTree_Node *node) {
+    if (node->right != NULL) {
+        return minimum(node->right);
+    }
+    struct BSTree_Node * y = node->p;
+    while (y != NULL && node == y->right) {
+        node = y;
+        y = y->p;
+    }
+    return y;
+}
+
+struct BSTree_Node *successor_in_Elem(BSTree bst, ElemType e) {
+    struct BSTree_Node * node = find_Elem(bst, e);
+    if (node == NULL) {
+        printf("elem is not in the tree\n");
+        return NULL;
+    }
+    return successor(bst, node);
 }
 
 void showAll(BSTree bst) {
@@ -110,13 +127,14 @@ void showAll(BSTree bst) {
 		printf("%d ", bst->data);
 		showAll(bst->right);
 	}
+
 }
 
 void rand_in_Array(int *arr, int len) {
 	int i = 0;
 	for (; i < len; ++i) {
-		arr[i] = rand() % 100;	
-	}	
+		arr[i] = rand() % 100;
+	}
 }
 void printfArray(int *arr, int len) {
 	int i = 0;
@@ -125,22 +143,40 @@ void printfArray(int *arr, int len) {
 	}
 }
 int main() {
-	BSTree bst;
-    
+	BSTree bst = NULL;
+	//Modify By Lin Start, allocate memory to the Struct
+	//bst = (BSTree)malloc(sizeof(struct BSTree_Node));
+	//bst->data = 10;
+	//bst->right = NULL;
+	//bst->left = NULL;
+    //Modify By Lin End
 	treeInsert(&bst, 3);
 	showAll(bst);
+
 	printf("\n*************************\n");
-	ElemType arr[6] = {3, 45, 13, 1, 96, 34};
+	ElemType arr[] = {3, 45, 13, 1, 96, 34};
 	//rand_in_Array(arr, 9);
 	printfArray(arr, 6);
 	printf("\n");
 	treeInser_in_Array(&bst, arr, 6);
 	showAll(bst);
-//	struct BSTree_Node * f = find_Elem(bst, 13);
+	struct BSTree_Node * f = find_Elem(bst, 13);
     char *p;
-    //if (f->data == 13) {
-    //    printf("sucess!\n");
-    //}
-    //showAll(bst);
+   if (f->data == 13) {
+        printf("sucess!\n");
+   }
+    printf("minimum:%d\n", minimum(bst)->data);
+    printf("maxmum:%d\n", maxmum(bst)->data);
+    showAll(bst);
+    int i = 0;
+    printf("\n");
+    while (i < 6) {
+       struct BSTree_Node * p = successor_in_Elem(bst, arr[i++]); 
+       if (p) {
+            printf ("%d ", p->data);   
+        }
+    }
+    
+    printf("\n");
     return 1;
 }
