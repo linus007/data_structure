@@ -120,7 +120,52 @@ struct BSTree_Node *successor_in_Elem(BSTree bst, ElemType e) {
     }
     return successor(bst, node);
 }
+ElemType deleteNode (BSTree *bst, struct BSTree_Node *node) {
+    if (node == NULL || *bst == NULL) {
+        printf("empty node or empty tree\n");
+        return -1;
+    }
+    struct BSTree_Node * y = NULL;
+    if (node->left == NULL || node->right == NULL) {
+        y = node;
+    } else {
+        //successor of node would never be null
+        y = successor(*bst, node);
+    }
+    struct BSTree_Node *x = NULL;
+    if (y->left != NULL) {
+        x = y->left;
+    } else {
+        x = y->right;
+    }
+    printf("be ok!\n");
+    if (x != NULL) {
+        x->p = y->p;
+    }
+    if (y->p == NULL) {
+        // the node will be deleted is root
+        *bst = x;
+    } else if (y == y->p->left) {
+        y->p->left = x;
+    } else {
+        y->p->right = x;
+    }
+    if (y != node) {
+        node->data = y->data;
+    }
+    free(y);
+    y = NULL;
+    return 1;
+}
 
+ElemType delete_in_Elem(BSTree *bst, ElemType e) {
+    struct BSTree_Node * node = find_Elem(*bst, e);
+    if (node == NULL) {
+        return -1000000;
+    }
+    
+    return deleteNode(bst, node);
+}
 void showAll(BSTree bst) {
 	if (bst != NULL) {
 		showAll(bst->left);
@@ -178,5 +223,7 @@ int main() {
     }
     
     printf("\n");
+    delete_in_Elem(&bst, 45);
+    showAll(bst);
     return 1;
 }
