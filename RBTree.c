@@ -199,7 +199,9 @@ int main() {
 	insertInElem(rbt, 44);
 	insertInElem(rbt, 33);
 	insertInElem(rbt, 23);
-	printAll(rbt);
+	
+    printAll(rbt);
 	printf("root:%d\n",rbt->root->right->data);
-	return 1;
+	printf("hello world\n");
+    return 1;
 }
