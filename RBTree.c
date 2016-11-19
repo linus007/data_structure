@@ -1,3 +1,20 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Gist
+ @linus007
+ Unwatch 1
+  Star 0
+  Fork 0 linus007/data_structure
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Pulse  Graphs  Settings
+Branch: dev Find file Copy pathdata_structure/RBTree.c
+373d2ff  8 minutes ago
+@linus007 linus007 insert finished 2016-11-19 09:17:35
+1 contributor
+RawBlameHistory    
+206 lines (197 sloc)  4.42 KB
 #include<stdio.h>
 #include<stdlib.h>
 typedef int ElemType;
@@ -12,7 +29,7 @@ typedef struct RBTreeNode{
     struct RBTreeNode *left;
     struct RBTreeNode *right;
     COLOR color;
-} RBTreeNode; 
+} RBTreeNode;
 
 /**
  *
@@ -42,7 +59,7 @@ int createRBTree(RBTree * tree) {
         printf ("memory allocation failed!\n");
         exit(0);
     }
-    (*tree)->root = NULL;
+    (*tree)->root = nilT;
     (*tree)->nilT = nilT;
     return 1;
 }
@@ -104,7 +121,7 @@ void rbInsertFixUp(RBTree rbt, RBTreeNode * z) {
                 //  case2
                 z = z->p;
                 leftRotate(rbt, z);
-                // case3
+            } else { 	// case3
                 z->p->color = BLACK;
                 z->p->p->color = RED;
                 rightRotate(rbt, z->p->p);
@@ -119,10 +136,11 @@ void rbInsertFixUp(RBTree rbt, RBTreeNode * z) {
                 z = z->p->p;
             } else if (z == z->p->left) {
                 z = z->p;
-                leftRotate(rbt, z);
+                rightRotate(rbt, z);
+			} else {
                 z->p->color = BLACK;
                 z->p->p->color = RED;
-                rightRotate(rbt, z->p->p);
+                leftRotate(rbt, z->p->p);
             }
         }
     }
@@ -136,12 +154,14 @@ void rbInsertFixUp(RBTree rbt, RBTreeNode * z) {
 int insert(RBTree rbt, RBTreeNode *node) {
     RBTreeNode *y = rbt->nilT;
     RBTreeNode *x = rbt->root;
-    while (x != NULL) {
+    while (x != rbt->nilT) {
         y = x;
         if (x->data > node->data) {
             x = x->left;
+            printf("small\n");
         } else if (x->data < node->data){
             x = x->right;
+            printf("big\n");
         } else {
             return 0;
         }
@@ -157,12 +177,48 @@ int insert(RBTree rbt, RBTreeNode *node) {
     node->left = rbt->nilT;
     node->right = rbt->nilT;
     node->color = RED;
-
+	rbInsertFixUp(rbt, node);
+	return 1;
 }
+int insertInElem(RBTree rbt, ElemType data) {
+	RBTreeNode *node = (RBTreeNode *) malloc(sizeof(RBTreeNode));
+	if (!node) {
+		printf("memory allocation failed!\n");
+		exit(0);
+	}
+	node->data = data;
+	node->left = rbt->nilT;
+	node->right = rbt->nilT;
+	node->p = rbt->nilT;
+	return insert(rbt, node);
+}
+
+void print(RBTree rbt, RBTreeNode *x) {
+	if (x != rbt->nilT) {
+		print(rbt, x->left);
+		printf("%d ", x->data);
+		print(rbt, x->right);
+	}
+}
+void printAll(RBTree rbt) {
+	print(rbt, rbt->root);
+	printf("\n");
+}
+
 
 int main() {
     printf("%d\n", BLACK);
     printf("hello world!\n");
     RBTree rbt;
     createRBTree(&rbt);
+	insertInElem(rbt, 3);
+	insertInElem(rbt, 1);
+	insertInElem(rbt, 44);
+	insertInElem(rbt, 33);
+	insertInElem(rbt, 23);
+	printAll(rbt);
+	printf("root:%d\n",rbt->root->right->data);
+	return 1;
 }
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help
