@@ -186,7 +186,13 @@ void print(RBTree rbt, RBTreeNode *x) {
 void printAll(RBTree rbt) {
 	print(rbt, rbt->root);
 	printf("\n");
+>>>>>>> origin/dev
 }
+void printAll(RBTree rbt) {
+	print(rbt, rbt->root);
+	printf("\n");
+}
+
 
 
 int main() {
@@ -199,9 +205,8 @@ int main() {
 	insertInElem(rbt, 44);
 	insertInElem(rbt, 33);
 	insertInElem(rbt, 23);
-	
-    printAll(rbt);
+	printAll(rbt);
 	printf("root:%d\n",rbt->root->right->data);
-	printf("hello world\n");
-    return 1;
+	return 1;
+>>>>>>> origin/dev
 }
