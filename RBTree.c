@@ -1,20 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Gist
- @linus007
- Unwatch 1
-  Star 0
-  Fork 0 linus007/data_structure
- Code  Issues 0  Pull requests 0  Projects 0  Wiki  Pulse  Graphs  Settings
-Branch: dev Find file Copy pathdata_structure/RBTree.c
-373d2ff  8 minutes ago
-@linus007 linus007 insert finished 2016-11-19 09:17:35
-1 contributor
-RawBlameHistory    
-206 lines (197 sloc)  4.42 KB
 #include<stdio.h>
 #include<stdlib.h>
 typedef int ElemType;
@@ -220,5 +203,3 @@ int main() {
 	printf("root:%d\n",rbt->root->right->data);
 	return 1;
 }
-Contact GitHub API Training Shop Blog About
-© 2016 GitHub, Inc. Terms Privacy Security Status Help
