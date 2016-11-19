@@ -46,6 +46,43 @@ int createRBTree(RBTree * tree) {
     (*tree)->nilT = nilT;
     return 1;
 }
+
+RBTreeNode* minInNode(RBTree rbt, RBTreeNode *x) {
+    if (x == rbt->nilT) {
+        return rbt->nilT;
+    }
+    while (x->left != rbt->nilT) {
+        x = x->left;
+    }
+    return x;
+}
+RBTreeNode * min(RBTree rbt) {
+    return minInNode(rbt, rbt->root);
+}
+RBTreeNode *maxInNode(RBTree rbt, RBTreeNode *x) {
+    if (x == rbt->nilT) {
+        return rbt->nilT;
+    }
+    while (x->right != rbt->nilT) {
+        x = x->right;
+    }
+    return x;
+}
+RBTreeNode * max(RBTree rbt) {
+    return maxInNode(rbt, rbt->root);
+}
+
+RBTreeNode * successor(RBTree rbt, RBTreeNode *x) {
+    if (x->right != rbt->nilT) {
+        return minInNode(rbt, x->right);
+    }
+    RBTreeNode *y = x->p;
+    while (y != rbt->nilT && x == y->right) {
+        x = y;
+        y = y->p;
+    }
+    return y;
+}
 /**
  * 左旋
  * */
@@ -129,7 +166,20 @@ void rbInsertFixUp(RBTree rbt, RBTreeNode * z) {
     }
     rbt->root->color = BLACK;
 }
-
+RBTreeNode * findByElem(RBTree rbt, ElemType data) {
+    RBTreeNode * y = rbt->nilT;
+    RBTreeNode * x = rbt->root;
+    while (x != rbt->nilT) {
+        if (x->data < data) {
+            x = x->right;
+        } else if (x->data > data) {
+            x = x->left;
+        } else {
+            return x;
+        }
+    }
+    return NULL;
+}
 
 /**
  * 向树中插入节点
@@ -167,7 +217,7 @@ int insertInElem(RBTree rbt, ElemType data) {
 		printf("memory allocation failed!\n");
 		exit(0);
 	}
-	node->data = data;
+    node->data = data;
 	node->left = rbt->nilT;
 	node->right = rbt->nilT;
 	node->p = rbt->nilT;
@@ -196,5 +246,10 @@ int main() {
 	insertInElem(rbt, 23);
 	printAll(rbt);
 	printf("root:%d\n",rbt->root->right->data);
-	return 1;
+	RBTreeNode *n = findByElem(rbt, 44);
+    printf("min:%d\n", min(rbt)->data);
+    printf("max:%d\n", max(rbt)->data);
+    RBTreeNode * sus = findByElem(rbt, 23);
+    printf("%d", successor(rbt, sus)->data);
+    return 1;
 }
