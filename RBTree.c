@@ -141,10 +141,8 @@ int insert(RBTree rbt, RBTreeNode *node) {
         y = x;
         if (x->data > node->data) {
             x = x->left;
-            printf("small\n");
         } else if (x->data < node->data){
             x = x->right;
-            printf("big\n");
         } else {
             return 0;
         }
@@ -179,28 +177,19 @@ int insertInElem(RBTree rbt, ElemType data) {
 void print(RBTree rbt, RBTreeNode *x) {
 	if (x != rbt->nilT) {
 		print(rbt, x->left);
-		printf("%d ", x->data);
+		printf("data:%d, color:%d\n", x->data, x->color);
 		print(rbt, x->right);
 	}
 }
 void printAll(RBTree rbt) {
 	print(rbt, rbt->root);
-	printf("\n");
->>>>>>> origin/dev
-}
-void printAll(RBTree rbt) {
-	print(rbt, rbt->root);
-	printf("\n");
 }
 
 
 
 int main() {
-    printf("%d\n", BLACK);
-    printf("hello world!\n");
     RBTree rbt;
     createRBTree(&rbt);
-	insertInElem(rbt, 3);
 	insertInElem(rbt, 1);
 	insertInElem(rbt, 44);
 	insertInElem(rbt, 33);
@@ -208,5 +197,4 @@ int main() {
 	printAll(rbt);
 	printf("root:%d\n",rbt->root->right->data);
 	return 1;
->>>>>>> origin/dev
 }
