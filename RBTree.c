@@ -89,11 +89,11 @@ RBTreeNode * successor(RBTree rbt, RBTreeNode *x) {
 void leftRotate(RBTree rbt, RBTreeNode *x) {
     RBTreeNode * y = x->right;
     x->right = y->left;
-    if (y->left != NULL) {
+    if (y->left != rbt->nilT) {
         y->left->p = x;
     }
     y->p = x->p;
-    if (x->p == NULL) { // x节点原先为树根
+    if (x->p == rbt->nilT) { // x节点原先为树根
         rbt->root = y;
     } else if (x == x->p->left) {
         x->p->left = y;
@@ -108,13 +108,13 @@ void leftRotate(RBTree rbt, RBTreeNode *x) {
  * 右旋
  * */
 void rightRotate(RBTree rbt, RBTreeNode * x) {
-    RBTreeNode *y = x->left;
+    RBTreeNode *y = x->left; 
     x->left = y->right;
-    if (y->left != NULL) {
+    if (y->left != rbt->nilT) {
         y->right->p = x;
     }
     y->p = x->p;
-    if (x->p == NULL) {
+    if (x->p == rbt->nilT) {
         rbt->root = y;
     } else if (x == x->p->left) {
         x->p->left = y;
@@ -137,27 +137,30 @@ void rbInsertFixUp(RBTree rbt, RBTreeNode * z) {
                 z->p->color = BLACK;
                 z->p->p->color = RED;
                 z = z->p->p;
-            } else if (z == z->p->right) {
-                //  case2
-                z = z->p;
-                leftRotate(rbt, z);
-            } else { 	// case3
+            } else {
+                if (z == z->p->right) {
+                    //  case2
+                    z = z->p;
+                    leftRotate(rbt, z);
+                }
+                // case3
                 z->p->color = BLACK;
                 z->p->p->color = RED;
                 rightRotate(rbt, z->p->p);
             }
         }
         else {
-            y = z->p->left;
+            y = z->p->p->left;
             if (y->color == RED) {
                 y->color = BLACK;
                 z->p->color = BLACK;
                 z->p->p->color = RED;
                 z = z->p->p;
-            } else if (z == z->p->left) {
-                z = z->p;
-                rightRotate(rbt, z);
-			} else {
+            } else {
+                if (z == z->p->left) {
+                    z = z->p;
+                    rightRotate(rbt, z);
+			    }
                 z->p->color = BLACK;
                 z->p->p->color = RED;
                 leftRotate(rbt, z->p->p);
@@ -178,7 +181,7 @@ RBTreeNode * findByElem(RBTree rbt, ElemType data) {
             return x;
         }
     }
-    return NULL;
+    return rbt->nilT;
 }
 
 /**
@@ -208,7 +211,7 @@ int insert(RBTree rbt, RBTreeNode *node) {
     node->left = rbt->nilT;
     node->right = rbt->nilT;
     node->color = RED;
-	rbInsertFixUp(rbt, node);
+    rbInsertFixUp(rbt, node);
 	return 1;
 }
 int insertInElem(RBTree rbt, ElemType data) {
@@ -224,10 +227,114 @@ int insertInElem(RBTree rbt, ElemType data) {
 	return insert(rbt, node);
 }
 
+
+void deleteFixUp(RBTree rbt, RBTreeNode *x) {
+    while (x != rbt->root && x->color == BLACK) {
+        if (x == x->p->left) {
+            RBTreeNode *w = x->p->right;
+            if (w->color == RED) {  
+                // case1: w red, childre uncertain
+                w->color = BLACK;
+                x->p->color = RED;
+                leftRotate(rbt, x->p);
+                w = x->p->right;
+            }
+            if (w->left->color == BLACK && w->right->color == BLACK) {
+                // case2:w black and two child also black
+                w->color = BLACK;
+                x = x->p;
+            } else {
+                if (w->right->color == BLACK) {
+                    //case3:w black and right child black,
+                    //left child red
+                    w->left->color = BLACK;
+                    w->color = RED;
+                    rightRotate(rbt, w);
+                    w = x->p->right;
+                }
+                // case4: w black, right child black, 
+                // leftchild uncertain
+                w->color = x->p->color;
+                x->p->color = BLACK;
+                w->right->color = BLACK;
+                leftRotate(rbt, x->p);
+                // 跳出循环
+                x = rbt->root;
+            }
+        } else {
+            RBTreeNode *w = x->p->left;
+            if (w->color == RED) {
+                w->color = BLACK;
+                x->p->color = RED;
+                rightRotate(rbt, x->p);
+                w = x->p->left;
+            }
+            if (w->right->color == BLACK && w->left->color == BLACK) {
+                w->color = RED;
+                x = x->p;
+            } else {
+                if (w->left->color == BLACK) {
+                    w->color = RED;
+                    leftRotate(rbt, w);
+                    w = x->p->left;
+                }
+                w->color = x->p->color;
+                x->p->color = BLACK;
+                w->left->color = BLACK;
+                rightRotate(rbt, x->p);
+                x = rbt->root;
+            }
+        }
+    }
+    x->color = BLACK;
+}
+
+int delete(RBTree rbt, RBTreeNode *z) {
+    RBTreeNode *y = rbt->nilT;
+    if (z->left == rbt->nilT || z->right == rbt->nilT) {
+        y = z;
+    } else {
+        y = successor(rbt, z);
+    }
+    RBTreeNode * x = rbt->nilT;
+    if (y->left != rbt->nilT) {
+        x = y->left;
+    } else {
+        x = y->right;
+    }
+    x->p = y->p;
+    if (y->p == rbt->nilT) {
+        rbt->root = x;
+    } else if (y->p->left == y) {
+        y->p->left = x;
+    } else {
+        y->p->right = x;
+    }
+    if (y != z) {
+        z->data = y->data;
+    }
+    if (y->color == BLACK) {
+        // rb-delete-fix-up
+        deleteFixUp(rbt, x);
+    }
+    // 释放y节点的内存
+    //free(y);
+    //y = NULL;
+    return 1;
+}
+
+int deleteByElem(RBTree rbt, ElemType data) {
+    RBTreeNode * node = findByElem(rbt, data);
+    if (node == rbt->nilT) {
+        printf("elem not found!\n");
+        return 0;
+    }
+    return delete(rbt, node);
+}
 void print(RBTree rbt, RBTreeNode *x) {
 	if (x != rbt->nilT) {
 		print(rbt, x->left);
-		printf("data:%d, color:%d\n", x->data, x->color);
+		printf("x:%d,p:%d, left:%d,right:%d,data:%d, color:%d\n", x, x->p, x->left, x->right,x->data, x->color);
 		print(rbt, x->right);
 	}
 }
@@ -238,18 +345,32 @@ void printAll(RBTree rbt) {
 
 
 int main() {
+    printf("hello world!\n");
     RBTree rbt;
     createRBTree(&rbt);
 	insertInElem(rbt, 1);
 	insertInElem(rbt, 44);
-	insertInElem(rbt, 33);
+	insertInElem(rbt, 53);
 	insertInElem(rbt, 23);
-	printAll(rbt);
-	printf("root:%d\n",rbt->root->right->data);
+	insertInElem(rbt, 63);
+	insertInElem(rbt, 23);
+	insertInElem(rbt, 13);
+	insertInElem(rbt, 73);
+	insertInElem(rbt, 3);
 	RBTreeNode *n = findByElem(rbt, 44);
     printf("min:%d\n", min(rbt)->data);
     printf("max:%d\n", max(rbt)->data);
-    RBTreeNode * sus = findByElem(rbt, 23);
-    printf("%d", successor(rbt, sus)->data);
+    printAll(rbt);
+    RBTreeNode * sus = findByElem(rbt, 44);
+    if (sus != rbt->nilT) {
+        RBTreeNode * rbn = successor(rbt, sus);
+        if (rbn != rbt->nilT) {
+            printf("successor:%d\n", successor(rbt, sus)->data);
+        }
+    }
+    printf("\n*****************\n");
+    deleteByElem(rbt, 1);
+    printf("delete:\n");
+    printAll(rbt);
     return 1;
 }
