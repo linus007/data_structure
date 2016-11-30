@@ -4,3 +4,4 @@ binary_search_tree.c 二叉搜索树
 knapsack.c 0/1背包问题
 binomial_coefficient.c 二项式系数
 lcs 最长公共子序列
+ga_recursive_activity_selector.c 利用递归方法贪心求解 活动选择问题
