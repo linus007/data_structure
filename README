@@ -6,3 +6,4 @@ binomial_coefficient.c 二项式系数
 lcs 最长公共子序列
 ga_recursive_activity_selector.c 利用递归方法贪心求解 活动选择问题
 greedy_activity_selecto.c 非递归的贪心求解 活动选择问题
+matrix_link.c 矩阵链相乘
