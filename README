@@ -7,3 +7,6 @@ lcs 最长公共子序列
 ga_recursive_activity_selector.c 利用递归方法贪心求解 活动选择问题
 greedy_activity_selecto.c 非递归的贪心求解 活动选择问题
 matrix_link.c 矩阵链相乘
+array_Base.c array_Base.c 创建二维数组，输入值，初始化的基本包
+circle_queue.c circle_queue.h  环形队列基本包
+linkList.c linkList.h 链表
