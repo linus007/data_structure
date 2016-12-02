@@ -10,3 +10,6 @@ void init2DArray(int **arr, int m, int n);
 // 输出二维数组
 void print2DArray(int **arr, int m, int n);
 
+
+// 输出一个一维数组
+void printArray(int *arr, int n);

@@ -46,3 +46,12 @@ void print2DArray(int **arr, int m, int n) {
         printf("\n");
     }
 }
+
+
+void printArray(int *arr, int n) {
+    int i;
+    for (i = 0; i < n; ++i) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
