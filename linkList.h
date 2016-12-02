@@ -25,5 +25,8 @@ int delete_Node_In_LinkList(LinkList l, char header);
 // 输出整个链表
 void printLinkList(LinkList l);
 
+// 输出一个二维链表
+void print2DLinkList(LinkList *l, int n);
+
 // 删除整个链表
 void delete_LinkList(LinkList *l);

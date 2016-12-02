@@ -53,6 +53,14 @@ void printLinkList(LinkList l) {
         printf("\n");
     }
 }
+// 输出一个二维链表
+void print2DLinkList(LinkList *l, int n) {
+	int i;
+	for (i = 0; i < n; ++i) {
+		printLinkList(l[i]);
+	}
+}
+
 // 删除整个链表
 void delete_LinkList(LinkList *l) {
     Node *n = (*l)->next;
