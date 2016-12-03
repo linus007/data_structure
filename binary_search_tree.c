@@ -225,5 +225,6 @@ int main() {
     printf("\n");
     delete_in_Elem(&bst, 45);
     showAll(bst);
+    printf("\nsuccessor:%d\n", successor_in_Elem(bst, 96)->data);
     return 1;
 }

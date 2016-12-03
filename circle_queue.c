@@ -40,6 +40,14 @@ int enQueue(Queue que, ElemType e) {
     que->f = (que->f + 1) % que->size;
     return 1;
 }
+
+int isEmpty(Queue q) {
+    if(q->length == 0) {
+        return 1;
+    }
+    return 0;
+}
+
 void printQueue(Queue que) {
     printf("len:%d  ; size:%d ; s:%d ; f:%d \n", que->length, que->size, que->s, que->f);
     if (que->length != 0) {

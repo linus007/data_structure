@@ -13,3 +13,6 @@ void print2DArray(int **arr, int m, int n);
 
 // 输出一个一维数组
 void printArray(int *arr, int n);
+
+// 输出一个类似于int arr[len]的数组
+void printArray_Int(int *arr, int n);

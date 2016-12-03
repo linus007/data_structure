@@ -25,6 +25,16 @@ int minInArray(int *arr, int len) {
     return index;
 }
 
+void printArray(int *arr, int len) {
+    int i = 0;
+    while (i < len) {
+        printf("%d ", arr[i++]);
+    }
+    printf("\n");
+}
+
+
+
 /****************************************/
 /*            非功能函数                */
 /****************************************/
@@ -51,6 +61,9 @@ int follows(int arr[][MAX_LENGTH], int j, int *arr1) {
     }
     return count;
 }
+// 用来记录所走过的路径
+int road[MAX_LENGTH];
+int steps = 0;
 int shortPath(int arr[][MAX_LENGTH], int i) {
     
     // 存储后继节点
@@ -77,13 +90,6 @@ int shortPath(int arr[][MAX_LENGTH], int i) {
         shortest = distance[minIndex];
     }
     return shortest;
-}
-void printArray(int *arr, int len) {
-    int i = 0;
-    while (i < len) {
-        printf("%d ", arr[i++]);
-    }
-    printf("\n");
 }
 int main() {
     /*
@@ -117,5 +123,4 @@ int main() {
     };
     int sp = shortPath(path, 0);
     printf("shortest:%d\n", sp);
-
 }

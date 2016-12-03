@@ -22,4 +22,6 @@ ElemType deQueue(Queue q);
 
 int enQueue(Queue que, ElemType e);
 
+int isEmpty(Queue q);
+
 void printQueue(Queue que);
